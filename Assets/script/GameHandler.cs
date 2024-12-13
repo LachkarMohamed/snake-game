@@ -10,7 +10,7 @@ public class GameHandler : MonoBehaviour
 
     [SerializeField] private Snake snake;
     [SerializeField] private TextMeshProUGUI scoreText;
-    [SerializeField] private Button tryAgainButton;
+    [SerializeField] private PauseMenu pauseMenu;
 
     private LevelGrid levelGrid;
 
@@ -25,8 +25,6 @@ public class GameHandler : MonoBehaviour
     {
         instance = this;
         InitializeStatic();
-        tryAgainButton.gameObject.SetActive(false);
-        tryAgainButton.onClick.AddListener(ReloadScene);
     }
 
     private void Start()
@@ -95,15 +93,5 @@ public class GameHandler : MonoBehaviour
     private static void InitializeStatic()
     {
         score = 0;
-    }
-
-    public void ShowTryAgainButton()
-    {
-        tryAgainButton.gameObject.SetActive(true);
-    }
-
-    public void ReloadScene()
-    {
-        Loader.Load(Loader.Scene.GameScene);
     }
 }

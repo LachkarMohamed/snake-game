@@ -17,7 +17,10 @@ public class Snake : MonoBehaviour
     private int snakeBodySize;
     private List<SnakeMovePosition> snakeMovePositionList;
     private List<SnakeBodyPart> snakeBodyPartList;
+
     private bool isPaused;
+
+    private PauseMenu pauseMenu;
 
     private Sprite headSprite;
     private Sprite bodySprite;
@@ -32,6 +35,7 @@ public class Snake : MonoBehaviour
     private void Awake()
     {
         InitializeSnake();
+        pauseMenu = FindObjectOfType<PauseMenu>();
     }
 
     private void Start()
@@ -152,6 +156,7 @@ public class Snake : MonoBehaviour
         transform.eulerAngles = new Vector3(0, 0, GetAngleFromVector(gridMoveDirectionVector) - 90);
     }
 
+
     private void CheckSelfCollision()
     {
         foreach (SnakeBodyPart snakeBodyPart in snakeBodyPartList)
@@ -159,7 +164,7 @@ public class Snake : MonoBehaviour
             if (gridPosition == snakeBodyPart.GetGridPosition())
             {
                 state = State.Dead;
-                GameHandler.instance.ShowTryAgainButton();
+                pauseMenu.ShowPauseMenu(true);
                 break;
             }
         }
@@ -252,6 +257,17 @@ public class Snake : MonoBehaviour
         };
     }
 
+    private void PauseGame()
+    {
+        isPaused = true;
+        pauseMenu.ShowPauseMenu(false);
+    }
+
+    private void ResumeGame()
+    {
+        isPaused = false;
+        pauseMenu.HidePauseMenu();
+    }
     private class SnakeBodyPart
     {
         private SnakeMovePosition snakeMovePosition;
