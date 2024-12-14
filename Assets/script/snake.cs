@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
 
 public class Snake : MonoBehaviour
 {
@@ -67,6 +68,42 @@ public class Snake : MonoBehaviour
         snakeBodySize = 0;
         snakeBodyPartList = new List<SnakeBodyPart>();
         state = State.Alive;
+    }
+
+    public void SetDirectionUp()
+    {
+        if (lastDirection != Direction.Down)
+        {
+            gridMoveDirection = Direction.Up;
+            isPaused = false;
+        }
+    }
+
+    public void SetDirectionDown()
+    {
+        if (lastDirection != Direction.Up)
+        {
+            gridMoveDirection = Direction.Down;
+            isPaused = false;
+        }
+    }
+
+    public void SetDirectionLeft()
+    {
+        if (lastDirection != Direction.Right)
+        {
+            gridMoveDirection = Direction.Left;
+            isPaused = false;
+        }
+    }
+
+    public void SetDirectionRight()
+    {
+        if (lastDirection != Direction.Left)
+        {
+            gridMoveDirection = Direction.Right;
+            isPaused = false;
+        }
     }
 
     private void HandleInput()
@@ -140,14 +177,22 @@ public class Snake : MonoBehaviour
         };
     }
 
-    private void CheckFoodConsumption()
+    private async void CheckFoodConsumption()
     {
         if (levelGrid.TrySnakeEatFood(gridPosition))
         {
-            snakeBodySize++;
-            CreateSnakeBody();
-            GameHandler.AddScore(100);
+            await HandleFoodConsumption();
         }
+    }
+
+    private async Task HandleFoodConsumption()
+    {
+
+        await Task.Delay(1000);
+
+        snakeBodySize++;
+        CreateSnakeBody();
+        GameHandler.AddScore(100);
     }
 
     private void UpdateTransform()
