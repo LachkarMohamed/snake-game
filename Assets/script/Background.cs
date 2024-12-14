@@ -15,17 +15,17 @@ public class Background : MonoBehaviour
 
     private void ApplyBackground()
     {
-        Debug.Log($"Selected map: {GameHandler.selectedMap}");
+        //Debug.Log($"Selected map: {GameHandler.selectedMap}");
         if (GameAssets.i.mapSprites.TryGetValue(GameHandler.selectedMap, out Sprite mapSprite))
         {
             spriteRenderer.sprite = mapSprite;
         }
         else
         {
-            Debug.LogError($"Map sprite '{GameHandler.selectedMap}' not found.");
+            //Debug.LogError($"Map sprite '{GameHandler.selectedMap}' not found.");
             foreach (var key in GameAssets.i.mapSprites.Keys)
             {
-                Debug.Log($"Available map sprite key: {key}");
+                //Debug.Log($"Available map sprite key: {key}");
             }
         }
     }

@@ -76,6 +76,13 @@ public class GameHandler : MonoBehaviour
         return score;
     }
 
+    public void ReloadScene()
+    {
+        // Reset time scale before reloading the scene
+        Time.timeScale = 1f;
+        Loader.Load(Loader.Scene.GameScene);
+    }
+
     public static void AddScore(int amount)
     {
         score += amount;

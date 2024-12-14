@@ -86,9 +86,10 @@ public class Snake : MonoBehaviour
             gridMoveDirection = Direction.Right;
             isPaused = false;
         }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow) && lastDirection != Direction.Right && !isPaused)
+        else if (Input.GetKeyDown(KeyCode.LeftArrow) && lastDirection != Direction.Right)
         {
             gridMoveDirection = Direction.Left;
+            isPaused = false;
         }
     }
 
@@ -257,16 +258,10 @@ public class Snake : MonoBehaviour
         };
     }
 
-    private void PauseGame()
+    
+    public void SetPause(bool pause)
     {
-        isPaused = true;
-        pauseMenu.ShowPauseMenu(false);
-    }
-
-    private void ResumeGame()
-    {
-        isPaused = false;
-        pauseMenu.HidePauseMenu();
+        isPaused = pause;
     }
     private class SnakeBodyPart
     {

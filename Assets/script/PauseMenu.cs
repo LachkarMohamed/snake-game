@@ -31,23 +31,29 @@ public class PauseMenu : MonoBehaviour
     public void OnContinueButton()
     {
         HidePauseMenu();
+        Snake snake = FindObjectOfType<Snake>();
+        if (snake != null)
+        {
+            snake.SetPause(true);
+        }
     }
 
     public void OnReturnToMainMenuButton()
     {
         // Load the main menu scene
+        Time.timeScale = 1f;
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
     }
 
     public void OnTryAgainButton()
     {
-        // Reload the current scene
-        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        // Reset time scale before reloading the scene
+        Time.timeScale = 1f;
+        GameHandler.instance.ReloadScene();
     }
 
     public void OnPauseButton()
     {
-        Debug.Log("Pause button clicked");
         ShowPauseMenu(false);
     }
 }
