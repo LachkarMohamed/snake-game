@@ -48,7 +48,6 @@ public class GameAssets : MonoBehaviour
 
         mapSprites = new Dictionary<string, Sprite> {
             { "map1", mapSprite1 },
-            { "map2", mapSprite2 },
         };
     }
 
@@ -65,5 +64,4 @@ public class GameAssets : MonoBehaviour
     public Sprite foodSprite2;
     public Sprite foodSprite3;
     public Sprite mapSprite1;
-    public Sprite mapSprite2;
 }
