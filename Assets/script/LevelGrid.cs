@@ -9,6 +9,7 @@ public class LevelGrid
     private Snake snake;
     private Vector2Int foodGridPosition;
     private GameObject foodGameObject;
+    private List<GameObject> obstacles;
     private int width;
     private int height;
 
@@ -16,12 +17,19 @@ public class LevelGrid
     {
         this.width = width;
         this.height = height;
+        obstacles = new List<GameObject>();
     }
 
     public void Setup(Snake snake)
     {
         this.snake = snake;
         SpawnFood();
+    }
+
+    public void AddObstacle(Vector2Int position, GameObject obstaclePrefab)
+    {
+        GameObject obstacle = GameObject.Instantiate(obstaclePrefab, new Vector3(position.x, position.y), Quaternion.identity);
+        obstacles.Add(obstacle);
     }
 
     private void SpawnFood()

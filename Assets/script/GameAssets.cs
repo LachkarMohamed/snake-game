@@ -18,7 +18,27 @@ public class GameAssets : MonoBehaviour
     public Dictionary<string, Sprite> foodSprites;
     public Dictionary<string, Sprite> mapSprites;
 
+    public Dictionary<string, GameObject> obstaclePrefabs;
+    public Dictionary<string, Color> mapBackgroundColors;
+
     public Sprite defaultFoodSprite;
+
+    public Sprite headSprite1;
+    public Sprite headSprite2;
+    public Sprite headSprite3;
+    public Sprite bodySprite1;
+    public Sprite bodySprite2;
+    public Sprite bodySprite3;
+    public Sprite tailSprite1;
+    public Sprite tailSprite2;
+    public Sprite tailSprite3;
+    public Sprite foodSprite1;
+    public Sprite foodSprite2;
+    public Sprite foodSprite3;
+    public Sprite mapSprite1;
+
+    public GameObject obstaclePrefab1;
+    public GameObject obstaclePrefab2;
 
     private void Start()
     {
@@ -49,19 +69,15 @@ public class GameAssets : MonoBehaviour
         mapSprites = new Dictionary<string, Sprite> {
             { "map1", mapSprite1 },
         };
-    }
 
-    public Sprite headSprite1;
-    public Sprite headSprite2;
-    public Sprite headSprite3;
-    public Sprite bodySprite1;
-    public Sprite bodySprite2;
-    public Sprite bodySprite3;
-    public Sprite tailSprite1;
-    public Sprite tailSprite2;
-    public Sprite tailSprite3;
-    public Sprite foodSprite1;
-    public Sprite foodSprite2;
-    public Sprite foodSprite3;
-    public Sprite mapSprite1;
+        obstaclePrefabs = new Dictionary<string, GameObject> {
+            { "obstacle1", obstaclePrefab1 },
+            { "obstacle2", obstaclePrefab2 },
+        };
+
+        mapBackgroundColors = new Dictionary<string, Color> {
+            { "map1", Color.black },
+            { "map2", Color.gray },
+        };
+    }
 }
