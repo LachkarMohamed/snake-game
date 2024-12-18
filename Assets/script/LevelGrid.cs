@@ -9,7 +9,7 @@ public class LevelGrid
     private Snake snake;
     private Vector2Int foodGridPosition;
     private GameObject foodGameObject;
-    private List<GameObject> obstacles;
+    private List<Vector2Int> obstaclePositions;
     private int width;
     private int height;
 
@@ -17,7 +17,7 @@ public class LevelGrid
     {
         this.width = width;
         this.height = height;
-        obstacles = new List<GameObject>();
+        obstaclePositions = new List<Vector2Int>();
     }
 
     public void Setup(Snake snake)
@@ -28,18 +28,13 @@ public class LevelGrid
 
     public void AddObstacle(Vector2Int position, GameObject obstaclePrefab)
     {
-        GameObject obstacle = GameObject.Instantiate(obstaclePrefab, new Vector3(position.x, position.y), Quaternion.identity);
-        obstacles.Add(obstacle);
+        obstaclePositions.Add(position);
+        Vector3 worldPosition = new Vector3(position.x, position.y);
+        GameObject.Instantiate(obstaclePrefab, worldPosition, Quaternion.identity);
     }
 
     public List<Vector2Int> GetObstaclePositions()
     {
-        List<Vector2Int> obstaclePositions = new List<Vector2Int>();
-        foreach (GameObject obstacle in obstacles)
-        {
-            Vector2Int obstaclePosition = new Vector2Int(Mathf.RoundToInt(obstacle.transform.position.x), Mathf.RoundToInt(obstacle.transform.position.y));
-            obstaclePositions.Add(obstaclePosition);
-        }
         return obstaclePositions;
     }
 
@@ -48,7 +43,7 @@ public class LevelGrid
         do
         {
             foodGridPosition = new Vector2Int(Random.Range(0, width), Random.Range(0, height));
-        } while (snake.GetFullSnakeGridPositionList().IndexOf(foodGridPosition) != -1);
+        } while (snake.GetFullSnakeGridPositionList().IndexOf(foodGridPosition) != -1 || obstaclePositions.Contains(foodGridPosition));
 
         foodGameObject = new GameObject("Food", typeof(SpriteRenderer));
 
@@ -96,5 +91,10 @@ public class LevelGrid
             gridPosition.y = 0;
         }
         return gridPosition;
+    }
+
+    public bool IsObstacleAtPosition(Vector2Int position)
+    {
+        return obstaclePositions.Contains(position);
     }
 }

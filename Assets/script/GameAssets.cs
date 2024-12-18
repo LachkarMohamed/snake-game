@@ -10,38 +10,8 @@ public class GameAssets : MonoBehaviour
     private void Awake()
     {
         i = this;
-    }
 
-    public Dictionary<string, Sprite> headSprites;
-    public Dictionary<string, Sprite> bodySprites;
-    public Dictionary<string, Sprite> tailSprites;
-    public Dictionary<string, Sprite> foodSprites;
-    public Dictionary<string, Sprite> mapSprites;
-
-    public Dictionary<string, GameObject> obstaclePrefabs;
-    public Dictionary<string, Color> mapBackgroundColors;
-
-    public Sprite defaultFoodSprite;
-
-    public Sprite headSprite1;
-    public Sprite headSprite2;
-    public Sprite headSprite3;
-    public Sprite bodySprite1;
-    public Sprite bodySprite2;
-    public Sprite bodySprite3;
-    public Sprite tailSprite1;
-    public Sprite tailSprite2;
-    public Sprite tailSprite3;
-    public Sprite foodSprite1;
-    public Sprite foodSprite2;
-    public Sprite foodSprite3;
-    public Sprite mapSprite1;
-
-    public GameObject obstaclePrefab1;
-    public GameObject obstaclePrefab2;
-
-    private void Start()
-    {
+        // Initialize the dictionaries in Awake
         headSprites = new Dictionary<string, Sprite> {
             { "head1", headSprite1 },
             { "head2", headSprite2 },
@@ -81,6 +51,34 @@ public class GameAssets : MonoBehaviour
 
         LogMapBackgroundColors();
     }
+
+    public Dictionary<string, Sprite> headSprites;
+    public Dictionary<string, Sprite> bodySprites;
+    public Dictionary<string, Sprite> tailSprites;
+    public Dictionary<string, Sprite> foodSprites;
+    public Dictionary<string, Sprite> mapSprites;
+
+    public Dictionary<string, GameObject> obstaclePrefabs;
+    public Dictionary<string, Color> mapBackgroundColors;
+
+    public Sprite defaultFoodSprite;
+
+    public Sprite headSprite1;
+    public Sprite headSprite2;
+    public Sprite headSprite3;
+    public Sprite bodySprite1;
+    public Sprite bodySprite2;
+    public Sprite bodySprite3;
+    public Sprite tailSprite1;
+    public Sprite tailSprite2;
+    public Sprite tailSprite3;
+    public Sprite foodSprite1;
+    public Sprite foodSprite2;
+    public Sprite foodSprite3;
+    public Sprite mapSprite1;
+
+    public GameObject obstaclePrefab1;
+    public GameObject obstaclePrefab2;
 
     private void LogMapBackgroundColors()
     {

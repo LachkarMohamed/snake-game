@@ -217,7 +217,7 @@ public class Snake : MonoBehaviour
         }
 
         // Check collision with obstacles
-        if (CheckObstacleCollision())
+        if (levelGrid.IsObstacleAtPosition(gridPosition))
         {
             state = State.Dead;
             pauseMenu.ShowPauseMenu(true);
