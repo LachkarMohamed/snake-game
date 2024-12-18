@@ -18,11 +18,8 @@ public class Snake : MonoBehaviour
     private int snakeBodySize;
     private List<SnakeMovePosition> snakeMovePositionList;
     private List<SnakeBodyPart> snakeBodyPartList;
-
     private bool isPaused;
-
     private PauseMenu pauseMenu;
-
     private Sprite headSprite;
     private Sprite bodySprite;
     private Sprite tailSprite;
@@ -110,23 +107,19 @@ public class Snake : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.UpArrow) && lastDirection != Direction.Down)
         {
-            gridMoveDirection = Direction.Up;
-            isPaused = false;
+            SetDirectionUp();
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow) && lastDirection != Direction.Up)
         {
-            gridMoveDirection = Direction.Down;
-            isPaused = false;
+            SetDirectionDown();
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow) && lastDirection != Direction.Left)
         {
-            gridMoveDirection = Direction.Right;
-            isPaused = false;
+            SetDirectionRight();
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow) && lastDirection != Direction.Right)
         {
-            gridMoveDirection = Direction.Left;
-            isPaused = false;
+            SetDirectionLeft();
         }
     }
 
@@ -134,7 +127,7 @@ public class Snake : MonoBehaviour
     {
         if (!ShouldMove()) return;
 
-        lastDirection = gridMoveDirection; // Update lastDirection only when the snake moves
+        lastDirection = gridMoveDirection;
         UpdateSnakePosition();
         CheckFoodConsumption();
         UpdateTransform();
@@ -187,7 +180,6 @@ public class Snake : MonoBehaviour
 
     private async Task HandleFoodConsumption()
     {
-
         await Task.Delay(1000);
 
         snakeBodySize++;
@@ -202,10 +194,8 @@ public class Snake : MonoBehaviour
         transform.eulerAngles = new Vector3(0, 0, GetAngleFromVector(gridMoveDirectionVector) - 90);
     }
 
-
     private void CheckSelfCollision()
     {
-        // Check collision with snake body
         foreach (SnakeBodyPart snakeBodyPart in snakeBodyPartList)
         {
             if (gridPosition == snakeBodyPart.GetGridPosition())
@@ -216,37 +206,11 @@ public class Snake : MonoBehaviour
             }
         }
 
-        // Check collision with obstacles
         if (levelGrid.IsObstacleAtPosition(gridPosition))
         {
             state = State.Dead;
             pauseMenu.ShowPauseMenu(true);
         }
-    }
-
-    private bool CheckObstacleCollision()
-    {
-        // Get the list of obstacles from the level grid
-        List<Vector2Int> obstaclePositions = levelGrid.GetObstaclePositions();
-
-        // Check if the snake's current position matches any obstacle position
-        foreach (Vector2Int obstaclePosition in obstaclePositions)
-        {
-            // Check if the snake's position is within the bounds of the obstacle
-            if (IsPositionWithinObstacleBounds(gridPosition, obstaclePosition))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private bool IsPositionWithinObstacleBounds(Vector2Int snakePosition, Vector2Int obstaclePosition)
-    {
-        // Assuming each obstacle occupies a single grid cell
-        // Adjust this method if obstacles can occupy multiple grid cells
-        return snakePosition == obstaclePosition;
     }
 
     private void CreateSnakeBody()
@@ -336,11 +300,11 @@ public class Snake : MonoBehaviour
         };
     }
 
-    
     public void SetPause(bool pause)
     {
         isPaused = pause;
     }
+
     private class SnakeBodyPart
     {
         private SnakeMovePosition snakeMovePosition;

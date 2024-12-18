@@ -1,8 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CodeMonkey;
-using CodeMonkey.Utils;
 
 public class LevelGrid
 {
@@ -12,6 +9,7 @@ public class LevelGrid
     private List<Vector2Int> obstaclePositions;
     private int width;
     private int height;
+    private GameObject obstaclePrefab;
 
     public LevelGrid(int width, int height)
     {
@@ -20,13 +18,14 @@ public class LevelGrid
         obstaclePositions = new List<Vector2Int>();
     }
 
-    public void Setup(Snake snake)
+    public void Setup(Snake snake, GameObject obstaclePrefab)
     {
         this.snake = snake;
+        this.obstaclePrefab = obstaclePrefab;
         SpawnFood();
     }
 
-    public void AddObstacle(Vector2Int position, GameObject obstaclePrefab)
+    public void AddObstacle(Vector2Int position)
     {
         obstaclePositions.Add(position);
         Vector3 worldPosition = new Vector3(position.x, position.y);
@@ -43,7 +42,7 @@ public class LevelGrid
         do
         {
             foodGridPosition = new Vector2Int(Random.Range(0, width), Random.Range(0, height));
-        } while (snake.GetFullSnakeGridPositionList().IndexOf(foodGridPosition) != -1 || obstaclePositions.Contains(foodGridPosition));
+        } while (snake.GetFullSnakeGridPositionList().Contains(foodGridPosition) || obstaclePositions.Contains(foodGridPosition));
 
         foodGameObject = new GameObject("Food", typeof(SpriteRenderer));
 

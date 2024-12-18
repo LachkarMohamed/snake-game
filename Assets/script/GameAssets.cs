@@ -7,58 +7,11 @@ public class GameAssets : MonoBehaviour
 {
     public static GameAssets i;
 
-    private void Awake()
-    {
-        i = this;
-
-        // Initialize the dictionaries in Awake
-        headSprites = new Dictionary<string, Sprite> {
-            { "head1", headSprite1 },
-            { "head2", headSprite2 },
-            { "head3", headSprite3 },
-        };
-
-        bodySprites = new Dictionary<string, Sprite> {
-            { "body1", bodySprite1 },
-            { "body2", bodySprite2 },
-            { "body3", bodySprite3 },
-        };
-
-        tailSprites = new Dictionary<string, Sprite> {
-            { "tail1", tailSprite1 },
-            { "tail2", tailSprite2 },
-            { "tail3", tailSprite3 }
-        };
-
-        foodSprites = new Dictionary<string, Sprite> {
-            { "food1", foodSprite1 },
-            { "food2", foodSprite2 },
-            { "food3", foodSprite3 },
-        };
-
-        mapSprites = new Dictionary<string, Sprite> {
-            { "map1", mapSprite1 },
-        };
-
-        obstaclePrefabs = new Dictionary<string, GameObject> {
-            { "obstacle1", obstaclePrefab1 },
-            { "obstacle2", obstaclePrefab2 },
-        };
-
-        mapBackgroundColors = new Dictionary<string, Color> {
-            { "map1", Color.black },
-        };
-
-        LogMapBackgroundColors();
-    }
-
     public Dictionary<string, Sprite> headSprites;
     public Dictionary<string, Sprite> bodySprites;
     public Dictionary<string, Sprite> tailSprites;
     public Dictionary<string, Sprite> foodSprites;
     public Dictionary<string, Sprite> mapSprites;
-
-    public Dictionary<string, GameObject> obstaclePrefabs;
     public Dictionary<string, Color> mapBackgroundColors;
 
     public Sprite defaultFoodSprite;
@@ -78,7 +31,52 @@ public class GameAssets : MonoBehaviour
     public Sprite mapSprite1;
 
     public GameObject obstaclePrefab1;
-    public GameObject obstaclePrefab2;
+
+    private void Awake()
+    {
+        i = this;
+
+        // Initialize the dictionaries in Awake
+        headSprites = new Dictionary<string, Sprite>
+        {
+            { "head1", headSprite1 },
+            { "head2", headSprite2 },
+            { "head3", headSprite3 }
+        };
+
+        bodySprites = new Dictionary<string, Sprite>
+        {
+            { "body1", bodySprite1 },
+            { "body2", bodySprite2 },
+            { "body3", bodySprite3 }
+        };
+
+        tailSprites = new Dictionary<string, Sprite>
+        {
+            { "tail1", tailSprite1 },
+            { "tail2", tailSprite2 },
+            { "tail3", tailSprite3 }
+        };
+
+        foodSprites = new Dictionary<string, Sprite>
+        {
+            { "food1", foodSprite1 },
+            { "food2", foodSprite2 },
+            { "food3", foodSprite3 }
+        };
+
+        mapSprites = new Dictionary<string, Sprite>
+        {
+            { "map1", mapSprite1 }
+        };
+
+        mapBackgroundColors = new Dictionary<string, Color>
+        {
+            { "map1", Color.black }
+        };
+
+        LogMapBackgroundColors();
+    }
 
     private void LogMapBackgroundColors()
     {
