@@ -77,7 +77,16 @@ public class GameAssets : MonoBehaviour
 
         mapBackgroundColors = new Dictionary<string, Color> {
             { "map1", Color.black },
-            { "map2", Color.gray },
         };
+
+        LogMapBackgroundColors();
+    }
+
+    private void LogMapBackgroundColors()
+    {
+        foreach (var entry in mapBackgroundColors)
+        {
+            Debug.Log($"Map: {entry.Key}, Color: {entry.Value}");
+        }
     }
 }

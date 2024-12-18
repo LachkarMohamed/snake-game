@@ -32,6 +32,17 @@ public class LevelGrid
         obstacles.Add(obstacle);
     }
 
+    public List<Vector2Int> GetObstaclePositions()
+    {
+        List<Vector2Int> obstaclePositions = new List<Vector2Int>();
+        foreach (GameObject obstacle in obstacles)
+        {
+            Vector2Int obstaclePosition = new Vector2Int(Mathf.RoundToInt(obstacle.transform.position.x), Mathf.RoundToInt(obstacle.transform.position.y));
+            obstaclePositions.Add(obstaclePosition);
+        }
+        return obstaclePositions;
+    }
+
     private void SpawnFood()
     {
         do

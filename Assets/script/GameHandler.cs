@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -31,16 +32,20 @@ public class GameHandler : MonoBehaviour
     {
         instance = this;
         InitializeStatic();
-        InitializeMapData();
+        StartCoroutine(InitializeMapData());
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
         levelGrid = new LevelGrid(16, 16);
         levelGrid.Setup(snake);
         snake.Setup(levelGrid);
 
         InitializeGameSettings();
+
+        // Wait for InitializeMapData coroutine to complete
+        yield return StartCoroutine(InitializeMapData());
+
         LoadSelectedMap(selectedMap);
     }
 
@@ -79,26 +84,43 @@ public class GameHandler : MonoBehaviour
         snake.SetSpeed(selectedSpeed);
     }
 
-    private void InitializeMapData()
+    private IEnumerator InitializeMapData()
     {
+        while (GameAssets.i == null || GameAssets.i.mapBackgroundColors == null)
+        {
+            yield return null;
+        }
+
+        if (GameAssets.i.obstaclePrefab1 == null || GameAssets.i.obstaclePrefab2 == null)
+        {
+            Debug.LogError("Obstacle prefabs are not initialized.");
+            yield break;
+        }
+
         mapDataDictionary = new Dictionary<string, MapData>();
 
         // Example map data
         mapDataDictionary["map1"] = new MapData(
             new List<Vector2Int> { new Vector2Int(5, 5), new Vector2Int(10, 10) },
             new List<GameObject> { GameAssets.i.obstaclePrefab1, GameAssets.i.obstaclePrefab2 },
-            GameAssets.i.mapBackgroundColors["map1"]
-        );
-
-        mapDataDictionary["map2"] = new MapData(
-            new List<Vector2Int> { new Vector2Int(3, 3), new Vector2Int(7, 7) },
-            new List<GameObject> { GameAssets.i.obstaclePrefab2, GameAssets.i.obstaclePrefab1 },
-            GameAssets.i.mapBackgroundColors["map2"]
+            GameAssets.i.mapBackgroundColors.ContainsKey("map1") ? GameAssets.i.mapBackgroundColors["map1"] : (Color?)null
         );
     }
 
     private void LoadSelectedMap(string selectedMap)
     {
+        if (mapDataDictionary == null)
+        {
+            Debug.LogError("Map data dictionary is not initialized.");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(selectedMap))
+        {
+            Debug.LogError("Selected map is null or empty.");
+            return;
+        }
+
         if (mapDataDictionary.TryGetValue(selectedMap, out MapData mapData))
         {
             for (int i = 0; i < mapData.ObstaclePositions.Count; i++)
@@ -114,7 +136,7 @@ public class GameHandler : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Selected map not found!");
+            Debug.LogError($"Selected map '{selectedMap}' not found in map data dictionary.");
         }
     }
 

@@ -205,15 +205,48 @@ public class Snake : MonoBehaviour
 
     private void CheckSelfCollision()
     {
+        // Check collision with snake body
         foreach (SnakeBodyPart snakeBodyPart in snakeBodyPartList)
         {
             if (gridPosition == snakeBodyPart.GetGridPosition())
             {
                 state = State.Dead;
                 pauseMenu.ShowPauseMenu(true);
-                break;
+                return;
             }
         }
+
+        // Check collision with obstacles
+        if (CheckObstacleCollision())
+        {
+            state = State.Dead;
+            pauseMenu.ShowPauseMenu(true);
+        }
+    }
+
+    private bool CheckObstacleCollision()
+    {
+        // Get the list of obstacles from the level grid
+        List<Vector2Int> obstaclePositions = levelGrid.GetObstaclePositions();
+
+        // Check if the snake's current position matches any obstacle position
+        foreach (Vector2Int obstaclePosition in obstaclePositions)
+        {
+            // Check if the snake's position is within the bounds of the obstacle
+            if (IsPositionWithinObstacleBounds(gridPosition, obstaclePosition))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool IsPositionWithinObstacleBounds(Vector2Int snakePosition, Vector2Int obstaclePosition)
+    {
+        // Assuming each obstacle occupies a single grid cell
+        // Adjust this method if obstacles can occupy multiple grid cells
+        return snakePosition == obstaclePosition;
     }
 
     private void CreateSnakeBody()
