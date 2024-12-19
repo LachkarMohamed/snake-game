@@ -3,97 +3,106 @@ using UnityEngine;
 
 public class LevelGrid
 {
-    private Snake snake;
-    private Vector2Int foodGridPosition;
-    private GameObject foodGameObject;
-    private List<Vector2Int> obstaclePositions;
     private int width;
     private int height;
-    private GameObject obstaclePrefab;
+    private HashSet<Vector2Int> occupiedPositions;
+    private GameObject foodPrefab;
+    private Vector2Int foodPosition;
 
     public LevelGrid(int width, int height)
     {
         this.width = width;
         this.height = height;
-        obstaclePositions = new List<Vector2Int>();
+        occupiedPositions = new HashSet<Vector2Int>();
     }
 
-    public void Setup(Snake snake, GameObject obstaclePrefab)
+    public void Setup(Snake snake, GameObject foodPrefab)
     {
-        this.snake = snake;
-        this.obstaclePrefab = obstaclePrefab;
+        this.foodPrefab = foodPrefab;
+        snake.OnSnakeMove += HandleSnakeMove;
+        snake.OnSnakeEat += HandleSnakeEat;
         SpawnFood();
     }
 
     public void AddObstacle(Vector2Int position)
     {
-        obstaclePositions.Add(position);
-        Vector3 worldPosition = new Vector3(position.x, position.y);
-        GameObject.Instantiate(obstaclePrefab, worldPosition, Quaternion.identity);
+        occupiedPositions.Add(position);
     }
 
-    public List<Vector2Int> GetObstaclePositions()
+    public void RemoveOccupiedPosition(Vector2Int position)
     {
-        return obstaclePositions;
+        occupiedPositions.Remove(position);
     }
 
-    private void SpawnFood()
+    public bool IsPositionOccupied(Vector2Int position)
     {
-        do
-        {
-            foodGridPosition = new Vector2Int(Random.Range(0, width), Random.Range(0, height));
-        } while (snake.GetFullSnakeGridPositionList().Contains(foodGridPosition) || obstaclePositions.Contains(foodGridPosition));
+        return occupiedPositions.Contains(position);
+    }
 
-        foodGameObject = new GameObject("Food", typeof(SpriteRenderer));
+    public void SpawnFood()
+    {
+        foodPosition = GetRandomUnoccupiedPosition();
+        occupiedPositions.Add(foodPosition);
+        Object.Instantiate(foodPrefab, new Vector3(foodPosition.x, foodPosition.y), Quaternion.identity);
+    }
 
-        if (GameAssets.i.foodSprites.TryGetValue(GameHandler.selectedFood, out Sprite foodSprite))
+    private Vector2Int GetRandomUnoccupiedPosition()
+    {
+        List<Vector2Int> availablePositions = new List<Vector2Int>();
+
+        for (int x = 0; x < width; x++)
         {
-            foodGameObject.GetComponent<SpriteRenderer>().sprite = foodSprite;
+            for (int y = 0; y < height; y++)
+            {
+                Vector2Int position = new Vector2Int(x, y);
+                if (!IsPositionOccupied(position))
+                {
+                    availablePositions.Add(position);
+                }
+            }
         }
-        else
+
+        if (availablePositions.Count == 0)
         {
-            Debug.LogError($"Food skin '{GameHandler.selectedFood}' not found. Using default food sprite.");
-            foodGameObject.GetComponent<SpriteRenderer>().sprite = GameAssets.i.defaultFoodSprite;
+            Debug.LogError("No available positions to spawn food!");
+            return Vector2Int.zero;
         }
 
-        foodGameObject.transform.position = new Vector3(foodGridPosition.x, foodGridPosition.y);
+        return availablePositions[Random.Range(0, availablePositions.Count)];
     }
 
-    public bool TrySnakeEatFood(Vector2Int snakeGridPosition)
+    private void HandleSnakeMove(Vector2Int position)
     {
-        if (snakeGridPosition == foodGridPosition)
+        occupiedPositions.Add(position);
+    }
+
+    private void HandleSnakeEat(Vector2Int position)
+    {
+        occupiedPositions.Remove(foodPosition);
+        SpawnFood();
+    }
+
+    public Vector2Int ValidateGridPosition(Vector2Int gridPosition)
+    {
+        if (gridPosition.x < 0) gridPosition.x = width - 1;
+        if (gridPosition.x >= width) gridPosition.x = 0;
+        if (gridPosition.y < 0) gridPosition.y = height - 1;
+        if (gridPosition.y >= height) gridPosition.y = 0;
+        return gridPosition;
+    }
+
+    public bool TrySnakeEatFood(Vector2Int snakePosition)
+    {
+        if (snakePosition == foodPosition)
         {
-            Object.Destroy(foodGameObject);
             SpawnFood();
             return true;
         }
         return false;
     }
 
-    public Vector2Int ValidateGridPosition(Vector2Int gridPosition)
-    {
-        if (gridPosition.x < 0)
-        {
-            gridPosition.x = width - 1;
-        }
-        if (gridPosition.x > width - 1)
-        {
-            gridPosition.x = 0;
-        }
-
-        if (gridPosition.y < 0)
-        {
-            gridPosition.y = height - 1;
-        }
-        if (gridPosition.y > height - 1)
-        {
-            gridPosition.y = 0;
-        }
-        return gridPosition;
-    }
-
     public bool IsObstacleAtPosition(Vector2Int position)
     {
-        return obstaclePositions.Contains(position);
+        return occupiedPositions.Contains(position);
     }
 }
