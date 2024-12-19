@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameHandler : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class GameHandler : MonoBehaviour
 
     [SerializeField] private Snake snake;
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private PauseMenu pauseMenu;
     [SerializeField] private Camera mainCamera;
 
     private LevelGrid levelGrid;
@@ -29,6 +31,7 @@ public class GameHandler : MonoBehaviour
     {
         instance = this;
         InitializeStatic();
+        StartCoroutine(InitializeMapData());
     }
 
     private IEnumerator Start()
@@ -43,11 +46,16 @@ public class GameHandler : MonoBehaviour
         yield return StartCoroutine(InitializeMapData());
 
         LoadSelectedMap(selectedMap);
-        levelGrid.SpawnFood(); // Spawn food after loading map
     }
 
     private void InitializeGameSettings()
     {
+        if (GameAssets.i == null)
+        {
+            Debug.LogError("GameAssets is not initialized.");
+            return;
+        }
+
         if (string.IsNullOrEmpty(selectedHead) || !GameAssets.i.headSprites.ContainsKey(selectedHead))
         {
             Debug.LogError("Invalid or missing head skin selection.");
@@ -83,6 +91,24 @@ public class GameHandler : MonoBehaviour
 
     private IEnumerator InitializeMapData()
     {
+        if (GameAssets.i == null)
+        {
+            Debug.LogError("GameAssets is not initialized.");
+            yield break;
+        }
+
+        if (GameAssets.i.obstaclePrefab1 == null)
+        {
+            Debug.LogError("Obstacle prefab is not initialized.");
+            yield break;
+        }
+
+        if (GameAssets.i.mapBackgroundColors == null)
+        {
+            Debug.LogError("Map background colors are not initialized.");
+            yield break;
+        }
+
         mapDataDictionary = new Dictionary<string, GameHandlerMapData>();
 
         List<Vector2Int> obstaclePositions = new List<Vector2Int>
@@ -115,6 +141,18 @@ public class GameHandler : MonoBehaviour
 
     private void LoadSelectedMap(string selectedMap)
     {
+        if (mapDataDictionary == null)
+        {
+            Debug.LogError("Map data dictionary is not initialized.");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(selectedMap))
+        {
+            Debug.LogError("Selected map is null or empty.");
+            return;
+        }
+
         if (mapDataDictionary.TryGetValue(selectedMap, out GameHandlerMapData mapData))
         {
             foreach (var position in mapData.ObstaclePositions)
@@ -122,10 +160,14 @@ public class GameHandler : MonoBehaviour
                 levelGrid.AddObstacle(position);
             }
 
+            // Apply map-specific effects
             if (mapData.BackgroundColor.HasValue)
             {
                 mainCamera.backgroundColor = mapData.BackgroundColor.Value;
             }
+
+            // Now spawn the food after obstacles are added
+            levelGrid.SpawnFood();
         }
         else
         {
@@ -140,6 +182,7 @@ public class GameHandler : MonoBehaviour
 
     public void ReloadScene()
     {
+        // Reset time scale before reloading the scene
         Time.timeScale = 1f;
         Loader.Load(Loader.Scene.GameScene);
     }

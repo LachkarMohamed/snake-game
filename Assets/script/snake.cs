@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 
 public class Snake : MonoBehaviour
 {
-    public event Action<Vector2Int> OnSnakeMove;
-    public event Action<Vector2Int> OnSnakeEat;
     private enum Direction { Left, Right, Up, Down }
     private enum State { Alive, Dead }
 
@@ -45,10 +43,13 @@ public class Snake : MonoBehaviour
 
     private void Update()
     {
-        if (isPaused) return;
+        if (levelGrid == null || state == State.Dead) return;
 
         HandleInput();
-        HandleGridMovement();
+        if (!isPaused)
+        {
+            HandleGridMovement();
+        }
     }
 
     private void InitializeSnake()
@@ -155,7 +156,6 @@ public class Snake : MonoBehaviour
         Vector2Int gridMoveDirectionVector = GetDirectionVector(gridMoveDirection);
         gridPosition += gridMoveDirectionVector;
         gridPosition = levelGrid.ValidateGridPosition(gridPosition);
-        OnSnakeMove?.Invoke(gridPosition);
     }
 
     private Vector2Int GetDirectionVector(Direction direction)
@@ -170,11 +170,11 @@ public class Snake : MonoBehaviour
         };
     }
 
+
     private async void CheckFoodConsumption()
     {
         if (levelGrid.TrySnakeEatFood(gridPosition))
         {
-            OnSnakeEat?.Invoke(gridPosition);
             await HandleFoodConsumption();
         }
     }
