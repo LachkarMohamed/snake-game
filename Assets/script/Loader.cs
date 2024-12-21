@@ -32,4 +32,9 @@ public static class Loader
             loaderCallbackAction = null;
         }
     }
+
+    public static void InitializationComplete()
+    {
+        SceneManager.LoadScene(Scene.GameScene.ToString());
+    }
 }

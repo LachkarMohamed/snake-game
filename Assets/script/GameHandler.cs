@@ -46,6 +46,9 @@ public class GameHandler : MonoBehaviour
         yield return StartCoroutine(InitializeMapData());
 
         LoadSelectedMap(selectedMap);
+
+        // Signal that initialization is complete
+        Loader.InitializationComplete();
     }
 
     private void InitializeGameSettings()
