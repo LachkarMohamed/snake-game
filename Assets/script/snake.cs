@@ -181,11 +181,12 @@ public class Snake : MonoBehaviour
 
     private async Task HandleFoodConsumption()
     {
-        await Task.Delay(1000);
+        GameHandler.AddScore(10);
 
+        await Task.Delay(1000);
         snakeBodySize++;
         CreateSnakeBody();
-        GameHandler.AddScore(100);
+        
     }
 
     private void UpdateTransform()
