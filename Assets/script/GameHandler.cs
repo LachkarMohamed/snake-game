@@ -111,7 +111,7 @@ public class GameHandler : MonoBehaviour
 
         mapDataDictionary = new Dictionary<string, GameHandlerMapData>();
 
-        List<Vector2Int> obstaclePositions = new List<Vector2Int>
+        List<Vector2Int> obstaclePositionsMap1 = new List<Vector2Int>
         {
             new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(3, 0),
             new Vector2Int(4, 0), new Vector2Int(5, 0), new Vector2Int(6, 0), new Vector2Int(7, 0),
@@ -131,9 +131,16 @@ public class GameHandler : MonoBehaviour
         };
 
         mapDataDictionary["map1"] = new GameHandlerMapData(
-            obstaclePositions,
+            obstaclePositionsMap1,
             GameAssets.i.obstaclePrefab1,
             GameAssets.i.mapBackgroundColors.ContainsKey("map1") ? GameAssets.i.mapBackgroundColors["map1"] : (Color?)null
+        );
+
+        // Add map2 with no obstacles
+        mapDataDictionary["map2"] = new GameHandlerMapData(
+            new List<Vector2Int>(), // No obstacles
+            GameAssets.i.obstaclePrefab1,
+            GameAssets.i.mapBackgroundColors.ContainsKey("map2") ? GameAssets.i.mapBackgroundColors["map2"] : (Color?)null
         );
 
         yield return null;
