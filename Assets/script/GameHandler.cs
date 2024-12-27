@@ -42,7 +42,6 @@ public class GameHandler : MonoBehaviour
 
         InitializeGameSettings();
 
-        // Wait for InitializeMapData coroutine to complete
         yield return StartCoroutine(InitializeMapData());
 
         LoadSelectedMap(selectedMap);
@@ -136,7 +135,6 @@ public class GameHandler : MonoBehaviour
             GameAssets.i.mapBackgroundColors.ContainsKey("map1") ? GameAssets.i.mapBackgroundColors["map1"] : (Color?)null
         );
 
-        // Add map2 with no obstacles
         mapDataDictionary["map2"] = new GameHandlerMapData(
             new List<Vector2Int>(), // No obstacles
             GameAssets.i.obstaclePrefab1,
@@ -167,13 +165,11 @@ public class GameHandler : MonoBehaviour
                 levelGrid.AddObstacle(position);
             }
 
-            // Apply map-specific effects
             if (mapData.BackgroundColor.HasValue)
             {
                 mainCamera.backgroundColor = mapData.BackgroundColor.Value;
             }
 
-            // Now spawn the food after obstacles are added
             levelGrid.SpawnFood();
         }
         else
@@ -189,7 +185,6 @@ public class GameHandler : MonoBehaviour
 
     public void ReloadScene()
     {
-        // Reset time scale before reloading the scene
         Time.timeScale = 1f;
         Loader.Load(Loader.Scene.GameScene);
     }
