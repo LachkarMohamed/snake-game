@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
@@ -130,7 +131,7 @@ public class Snake : MonoBehaviour
         lastDirection = gridMoveDirection;
         UpdateSnakePosition();
         CheckFoodConsumption();
-        UpdateTransform();
+        StartCoroutine(SmoothMove());
         UpdateSnakeBodyParts();
         CheckSelfCollision();
     }
@@ -170,6 +171,23 @@ public class Snake : MonoBehaviour
         };
     }
 
+    private IEnumerator SmoothMove()
+    {
+        Vector3 startPosition = transform.position;
+        Vector3 endPosition = new Vector3(gridPosition.x, gridPosition.y);
+        float elapsedTime = 0f;
+
+        while (elapsedTime < gridMoveTimerMax)
+        {
+            transform.position = Vector3.Lerp(startPosition, endPosition, elapsedTime / gridMoveTimerMax);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = endPosition;
+        Vector2Int gridMoveDirectionVector = GetDirectionVector(gridMoveDirection);
+        transform.eulerAngles = new Vector3(0, 0, GetAngleFromVector(gridMoveDirectionVector) - 90);
+    }
 
     private async void CheckFoodConsumption()
     {
@@ -181,19 +199,19 @@ public class Snake : MonoBehaviour
 
     private async Task HandleFoodConsumption()
     {
-        GameHandler.AddScore(10);
+        int scoreToAdd = gridMoveTimerMax switch
+        {
+            0.3f => 5,   // Slow 
+            0.15f => 10, // Normal 
+            0.075f => 20, // Fast 
+            _ => 10      // Default
+        };
+
+        GameHandler.AddScore(scoreToAdd);
 
         await Task.Delay(1000);
         snakeBodySize++;
         CreateSnakeBody();
-        
-    }
-
-    private void UpdateTransform()
-    {
-        Vector2Int gridMoveDirectionVector = GetDirectionVector(gridMoveDirection);
-        transform.position = new Vector3(gridPosition.x, gridPosition.y);
-        transform.eulerAngles = new Vector3(0, 0, GetAngleFromVector(gridMoveDirectionVector) - 90);
     }
 
     private void CheckSelfCollision()
@@ -367,6 +385,7 @@ public class Snake : MonoBehaviour
 
         public void SetSprite(Sprite sprite) => spriteRenderer.sprite = sprite;
     }
+
 
     private class SnakeMovePosition
     {
