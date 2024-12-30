@@ -6,21 +6,21 @@ public class MovementButtons : MonoBehaviour
 
     public void MoveUp()
     {
-        snake.SetDirectionUp();
+        snake.SetDirection(Snake.Direction.Up);
     }
 
     public void MoveDown()
     {
-        snake.SetDirectionDown();
+        snake.SetDirection(Snake.Direction.Down);
     }
 
     public void MoveLeft()
     {
-        snake.SetDirectionLeft();
+        snake.SetDirection(Snake.Direction.Left);
     }
 
     public void MoveRight()
     {
-        snake.SetDirectionRight();
+        snake.SetDirection(Snake.Direction.Right);
     }
 }

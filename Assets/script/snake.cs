@@ -68,60 +68,24 @@ public class Snake : MonoBehaviour
         state = State.Alive;
     }
 
-    public void SetDirectionUp()
+    public void SetDirection(Direction direction)
     {
-        if (lastDirection != Direction.Down)
+        if ((direction == Direction.Up && lastDirection != Direction.Down) ||
+            (direction == Direction.Down && lastDirection != Direction.Up) ||
+            (direction == Direction.Left && lastDirection != Direction.Right) ||
+            (direction == Direction.Right && lastDirection != Direction.Left))
         {
-            gridMoveDirection = Direction.Up;
-            isPaused = false;
-        }
-    }
-
-    public void SetDirectionDown()
-    {
-        if (lastDirection != Direction.Up)
-        {
-            gridMoveDirection = Direction.Down;
-            isPaused = false;
-        }
-    }
-
-    public void SetDirectionLeft()
-    {
-        if (lastDirection != Direction.Right)
-        {
-            gridMoveDirection = Direction.Left;
-            isPaused = false;
-        }
-    }
-
-    public void SetDirectionRight()
-    {
-        if (lastDirection != Direction.Left)
-        {
-            gridMoveDirection = Direction.Right;
+            gridMoveDirection = direction;
             isPaused = false;
         }
     }
 
     private void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow) && lastDirection != Direction.Down)
-        {
-            SetDirectionUp();
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow) && lastDirection != Direction.Up)
-        {
-            SetDirectionDown();
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow) && lastDirection != Direction.Left)
-        {
-            SetDirectionRight();
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow) && lastDirection != Direction.Right)
-        {
-            SetDirectionLeft();
-        }
+        if (Input.GetKeyDown(KeyCode.UpArrow)) SetDirection(Direction.Up);
+        else if (Input.GetKeyDown(KeyCode.DownArrow)) SetDirection(Direction.Down);
+        else if (Input.GetKeyDown(KeyCode.RightArrow)) SetDirection(Direction.Right);
+        else if (Input.GetKeyDown(KeyCode.LeftArrow)) SetDirection(Direction.Left);
     }
 
     private void HandleGridMovement()
