@@ -165,16 +165,24 @@ public class Snake : MonoBehaviour
     {
         for (int i = 0; i < snakeBodyPartList.Count; i++)
         {
+            // Get the current and next move positions for interpolation
             SnakeMovePosition currentMovePosition = snakeMovePositionList[Mathf.Clamp(i, 0, snakeMovePositionList.Count - 1)];
             Vector3 startPosition = currentMovePosition.GetPreviousWorldPosition();
             Vector3 endPosition = currentMovePosition.GetCurrentWorldPosition();
 
+            // Smoothly interpolate position
             snakeBodyPartList[i].transform.position = Vector3.Lerp(startPosition, endPosition, lerpFactor);
 
-            // Update rotation
-            Vector2Int directionVector = GetDirectionVector(currentMovePosition.GetDirection());
-            float angle = GetAngleFromVector(directionVector) - 90;
-            snakeBodyPartList[i].transform.eulerAngles = new Vector3(0, 0, angle);
+            // Smoothly interpolate rotation between directions
+            SnakeMovePosition nextMovePosition = i < snakeMovePositionList.Count - 1 ? snakeMovePositionList[i + 1] : currentMovePosition;
+            Vector2Int currentDirectionVector = GetDirectionVector(currentMovePosition.GetDirection());
+            Vector2Int nextDirectionVector = GetDirectionVector(nextMovePosition.GetDirection());
+
+            float startAngle = GetAngleFromVector(currentDirectionVector) - 90;
+            float endAngle = GetAngleFromVector(nextDirectionVector) - 90;
+
+            float smoothAngle = Mathf.LerpAngle(startAngle, endAngle, lerpFactor);
+            snakeBodyPartList[i].transform.eulerAngles = new Vector3(0, 0, smoothAngle);
         }
     }
 
