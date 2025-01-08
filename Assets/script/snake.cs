@@ -26,6 +26,8 @@ public class Snake : MonoBehaviour
     private Sprite tailSprite;
     private Sprite foodSprite;
 
+    private float currentRotationAngle = 0f;
+
     public void Setup(LevelGrid levelGrid)
     {
         this.levelGrid = levelGrid;
@@ -128,7 +130,7 @@ public class Snake : MonoBehaviour
         gridPosition = levelGrid.ValidateGridPosition(gridPosition);
     }
 
-    private Vector2Int GetDirectionVector(Direction direction)
+    public static Vector2Int GetDirectionVector(Direction direction)
     {
         return direction switch
         {
@@ -145,27 +147,27 @@ public class Snake : MonoBehaviour
         Vector3 startPosition = transform.position;
         Vector3 endPosition = new Vector3(gridPosition.x, gridPosition.y);
         float elapsedTime = 0f;
+        float targetAngle = GetAngleFromVector(GetDirectionVector(gridMoveDirection));
+        Quaternion targetRotation = Quaternion.Euler(0, 0, targetAngle - 90);
 
         while (elapsedTime < gridMoveTimerMax)
         {
             float lerpFactor = elapsedTime / gridMoveTimerMax;
             transform.position = Vector3.Lerp(startPosition, endPosition, lerpFactor);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, lerpFactor);
             UpdateSnakeBodyPartsSmooth(lerpFactor);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
         transform.position = endPosition;
-        UpdateSnakeBodyPartsSmooth(1f);
-        Vector2Int gridMoveDirectionVector = GetDirectionVector(gridMoveDirection);
-        transform.eulerAngles = new Vector3(0, 0, GetAngleFromVector(gridMoveDirectionVector) - 90);
+        transform.rotation = targetRotation;
+        currentRotationAngle = targetAngle;
     }
-
     private void UpdateSnakeBodyPartsSmooth(float lerpFactor)
     {
         for (int i = 0; i < snakeBodyPartList.Count; i++)
         {
-            // Get the current and next move positions for interpolation
             SnakeMovePosition currentMovePosition = snakeMovePositionList[Mathf.Clamp(i, 0, snakeMovePositionList.Count - 1)];
             Vector3 startPosition = currentMovePosition.GetPreviousWorldPosition();
             Vector3 endPosition = currentMovePosition.GetCurrentWorldPosition();
@@ -173,19 +175,13 @@ public class Snake : MonoBehaviour
             // Smoothly interpolate position
             snakeBodyPartList[i].transform.position = Vector3.Lerp(startPosition, endPosition, lerpFactor);
 
-            // Smoothly interpolate rotation between directions
-            SnakeMovePosition nextMovePosition = i < snakeMovePositionList.Count - 1 ? snakeMovePositionList[i + 1] : currentMovePosition;
-            Vector2Int currentDirectionVector = GetDirectionVector(currentMovePosition.GetDirection());
-            Vector2Int nextDirectionVector = GetDirectionVector(nextMovePosition.GetDirection());
-
-            float startAngle = GetAngleFromVector(currentDirectionVector) - 90;
-            float endAngle = GetAngleFromVector(nextDirectionVector) - 90;
-
+            // Interpolate rotation
+            float startAngle = GetAngleFromVector(Snake.GetDirectionVector(currentMovePosition.GetPreviousDirection())) - 90;
+            float endAngle = GetAngleFromVector(Snake.GetDirectionVector(currentMovePosition.GetDirection())) - 90;
             float smoothAngle = Mathf.LerpAngle(startAngle, endAngle, lerpFactor);
             snakeBodyPartList[i].transform.eulerAngles = new Vector3(0, 0, smoothAngle);
         }
     }
-
 
 
     private async void CheckFoodConsumption()
@@ -249,13 +245,20 @@ public class Snake : MonoBehaviour
         for (int i = 0; i < snakeBodyPartList.Count; i++)
         {
             if (i < snakeMovePositionList.Count)
-                snakeBodyPartList[i].SetSnakeMovePosition(snakeMovePositionList[i]);
+            {
+                SnakeMovePosition movePosition = snakeMovePositionList[i];
+                snakeBodyPartList[i].SetSnakeMovePosition(movePosition);
+            }
         }
 
         if (snakeBodyPartList.Count > 0)
         {
             for (int i = 0; i < snakeBodyPartList.Count - 1; i++)
+            {
                 snakeBodyPartList[i].SetSprite(bodySprite);
+                snakeBodyPartList[i].transform.position = snakeBodyPartList[i + 1].transform.position;
+                snakeBodyPartList[i].transform.rotation = snakeBodyPartList[i + 1].transform.rotation;
+            }
             snakeBodyPartList[snakeBodyPartList.Count - 1].SetSprite(tailSprite);
         }
     }
@@ -265,7 +268,6 @@ public class Snake : MonoBehaviour
         float n = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         return n < 0 ? n + 360 : n;
     }
-
     public Vector2Int GetGridPosition() => gridPosition;
 
     public List<Vector2Int> GetFullSnakeGridPositionList()
