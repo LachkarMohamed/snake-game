@@ -1,7 +1,9 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
+using UnityEngine.UI;
 
 public class Snake : MonoBehaviour
 {
@@ -113,8 +115,28 @@ public class Snake : MonoBehaviour
         var newMovePosition = new SnakeMovePosition(previousMovePosition, gridPosition, gridMoveDirection);
 
         snakeMovePositionList.Insert(0, newMovePosition);
+
+        Vector2Int oldGridPosition = gridPosition;
         gridPosition += GetDirectionVector(gridMoveDirection);
         gridPosition = levelGrid.ValidateGridPosition(gridPosition);
+
+        // Check for teleportation
+        if (gridPosition != oldGridPosition && Vector3.Distance(new Vector3(gridPosition.x, gridPosition.y), new Vector3(oldGridPosition.x, oldGridPosition.y)) > Mathf.Max(levelGrid.width, levelGrid.height))
+        {
+            StartCoroutine(TeleportWithInvisibility());
+        }
+    }
+
+    private IEnumerator TeleportWithInvisibility()
+    {
+        // Make the snake invisible
+        SetSnakeVisibility(false);
+
+        // Wait for 1 millisecond
+        yield return new WaitForSeconds(0.001f);
+
+        // Make the snake visible again
+        SetSnakeVisibility(true);
     }
 
     private static Vector2Int GetDirectionVector(Direction direction)
@@ -151,6 +173,19 @@ public class Snake : MonoBehaviour
         transform.rotation = targetRotation;
         currentRotationAngle = targetAngle;
     }
+
+    private void SetSnakeVisibility(bool isVisible)
+    {
+        // Set head visibility
+        GetComponent<SpriteRenderer>().enabled = isVisible;
+
+        // Set body parts visibility
+        foreach (var bodyPart in snakeBodyPartList)
+        {
+            bodyPart.GetSpriteRenderer().enabled = isVisible;
+        }
+    }
+
 
     private void UpdateSnakeBodyPartsSmooth(float lerpFactor)
     {

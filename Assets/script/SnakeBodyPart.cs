@@ -59,4 +59,6 @@ public class SnakeBodyPart
     public Vector2Int GetGridPosition() => snakeMovePosition.GetGridPosition();
 
     public void SetSprite(Sprite sprite) => spriteRenderer.sprite = sprite;
+
+    public SpriteRenderer GetSpriteRenderer() => spriteRenderer;
 }

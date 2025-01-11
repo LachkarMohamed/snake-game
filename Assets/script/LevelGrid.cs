@@ -7,8 +7,8 @@ public class LevelGrid
     private Vector2Int foodGridPosition;
     private GameObject foodGameObject;
     private List<Vector2Int> obstaclePositions;
-    private int width;
-    private int height;
+    public int width;
+    public int height;
     private GameObject obstaclePrefab;
 
     public LevelGrid(int width, int height)
