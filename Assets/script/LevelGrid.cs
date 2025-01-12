@@ -7,8 +7,8 @@ public class LevelGrid
     private Vector2Int foodGridPosition;
     private GameObject foodGameObject;
     private List<Vector2Int> obstaclePositions;
-    public int width;
-    public int height;
+    private int width;
+    private int height;
     private GameObject obstaclePrefab;
 
     public LevelGrid(int width, int height)
@@ -30,7 +30,14 @@ public class LevelGrid
     {
         obstaclePositions.Add(position);
         Vector3 worldPosition = new Vector3(position.x, position.y);
-        GameObject.Instantiate(obstaclePrefab, worldPosition, Quaternion.identity);
+        GameObject obstacle = GameObject.Instantiate(obstaclePrefab, worldPosition, Quaternion.identity);
+
+        // Disable the SpriteRenderer to make the obstacle invisible
+        SpriteRenderer obstacleRenderer = obstacle.GetComponent<SpriteRenderer>();
+        if (obstacleRenderer != null)
+        {
+            obstacleRenderer.enabled = false;
+        }
     }
 
     public List<Vector2Int> GetObstaclePositions()

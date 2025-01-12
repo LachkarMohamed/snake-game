@@ -4,7 +4,7 @@ public class SnakeBodyPart
 {
     private SnakeMovePosition snakeMovePosition;
     public Transform transform;
-    private SpriteRenderer spriteRenderer;
+    public SpriteRenderer spriteRenderer;
 
     public SnakeBodyPart(int bodyIndex, Sprite bodySprite)
     {
@@ -59,6 +59,4 @@ public class SnakeBodyPart
     public Vector2Int GetGridPosition() => snakeMovePosition.GetGridPosition();
 
     public void SetSprite(Sprite sprite) => spriteRenderer.sprite = sprite;
-
-    public SpriteRenderer GetSpriteRenderer() => spriteRenderer;
 }
