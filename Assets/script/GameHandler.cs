@@ -110,7 +110,15 @@ public class GameHandler : MonoBehaviour
 
         mapDataDictionary = new Dictionary<string, GameHandlerMapData>();
 
-        List<Vector2Int> obstaclePositionsMap1 = new List<Vector2Int>
+        // No obstacles for map1
+        mapDataDictionary["map1"] = new GameHandlerMapData(
+            new List<Vector2Int>(), // No obstacles
+            GameAssets.i.obstaclePrefab1,
+            GameAssets.i.mapBackgroundColors.ContainsKey("map1") ? GameAssets.i.mapBackgroundColors["map1"] : (Color?)null
+        );
+
+        // Obstacles for map2
+        List<Vector2Int> obstaclePositionsMap2 = new List<Vector2Int>
         {
             new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(3, 0),
             new Vector2Int(4, 0), new Vector2Int(5, 0), new Vector2Int(6, 0), new Vector2Int(7, 0),
@@ -129,16 +137,58 @@ public class GameHandler : MonoBehaviour
             new Vector2Int(11, 15), new Vector2Int(12, 15), new Vector2Int(13, 15), new Vector2Int(14, 15)
         };
 
-        mapDataDictionary["map1"] = new GameHandlerMapData(
-            obstaclePositionsMap1,
-            GameAssets.i.obstaclePrefab1,
-            GameAssets.i.mapBackgroundColors.ContainsKey("map1") ? GameAssets.i.mapBackgroundColors["map1"] : (Color?)null
-        );
-
         mapDataDictionary["map2"] = new GameHandlerMapData(
-            new List<Vector2Int>(), // No obstacles
+            obstaclePositionsMap2,
             GameAssets.i.obstaclePrefab1,
             GameAssets.i.mapBackgroundColors.ContainsKey("map2") ? GameAssets.i.mapBackgroundColors["map2"] : (Color?)null
+        );
+
+        // Obstacles for map3
+        List<Vector2Int> obstaclePositionsMap3 = new List<Vector2Int>
+        {
+            new Vector2Int(3, 3), new Vector2Int(4, 3), new Vector2Int(5, 3), new Vector2Int(6, 3),
+            new Vector2Int(7, 3), new Vector2Int(8, 3), new Vector2Int(9, 3), new Vector2Int(10, 3),
+            new Vector2Int(11, 3), new Vector2Int(12, 3), new Vector2Int(13, 3), new Vector2Int(3, 12),
+            new Vector2Int(4, 12), new Vector2Int(5, 12), new Vector2Int(6, 12), new Vector2Int(7, 12),
+            new Vector2Int(8, 12), new Vector2Int(9, 12), new Vector2Int(10, 12), new Vector2Int(11, 12),
+            new Vector2Int(12, 12), new Vector2Int(13, 12)
+        };
+
+        mapDataDictionary["map3"] = new GameHandlerMapData(
+            obstaclePositionsMap3,
+            GameAssets.i.obstaclePrefab1,
+            GameAssets.i.mapBackgroundColors.ContainsKey("map3") ? GameAssets.i.mapBackgroundColors["map3"] : (Color?)null
+        );
+
+        // Obstacles for map4
+        List<Vector2Int> obstaclePositionsMap4 = new List<Vector2Int>
+        {
+            new Vector2Int(5, 5), new Vector2Int(6, 5), new Vector2Int(7, 5), new Vector2Int(8, 5),
+            new Vector2Int(9, 5), new Vector2Int(10, 5), new Vector2Int(5, 10), new Vector2Int(6, 10),
+            new Vector2Int(7, 10), new Vector2Int(8, 10), new Vector2Int(9, 10), new Vector2Int(10, 10)
+        };
+
+        mapDataDictionary["map4"] = new GameHandlerMapData(
+            obstaclePositionsMap4,
+            GameAssets.i.obstaclePrefab1,
+            GameAssets.i.mapBackgroundColors.ContainsKey("map4") ? GameAssets.i.mapBackgroundColors["map4"] : (Color?)null
+        );
+
+        // Obstacles for map5
+        List<Vector2Int> obstaclePositionsMap5 = new List<Vector2Int>
+        {
+            new Vector2Int(2, 2), new Vector2Int(3, 2), new Vector2Int(4, 2), new Vector2Int(5, 2),
+            new Vector2Int(6, 2), new Vector2Int(7, 2), new Vector2Int(8, 2), new Vector2Int(9, 2),
+            new Vector2Int(10, 2), new Vector2Int(11, 2), new Vector2Int(12, 2), new Vector2Int(13, 2),
+            new Vector2Int(2, 13), new Vector2Int(3, 13), new Vector2Int(4, 13), new Vector2Int(5, 13),
+            new Vector2Int(6, 13), new Vector2Int(7, 13), new Vector2Int(8, 13), new Vector2Int(9, 13),
+            new Vector2Int(10, 13), new Vector2Int(11, 13), new Vector2Int(12, 13), new Vector2Int(13, 13)
+        };
+
+        mapDataDictionary["map5"] = new GameHandlerMapData(
+            obstaclePositionsMap5,
+            GameAssets.i.obstaclePrefab1,
+            GameAssets.i.mapBackgroundColors.ContainsKey("map5") ? GameAssets.i.mapBackgroundColors["map5"] : (Color?)null
         );
 
         yield return null;
