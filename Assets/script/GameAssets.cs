@@ -73,18 +73,18 @@ public class GameAssets : MonoBehaviour
         {
             { "map1", mapSprite1 },
             { "map2", mapSprite2 },
-            { "map3", mapSprite3 }, 
-            { "map4", mapSprite4 }, 
-            { "map5", mapSprite5 } 
+            { "map3", mapSprite3 },
+            { "map4", mapSprite4 },
+            { "map5", mapSprite5 }
         };
 
         mapBackgroundColors = new Dictionary<string, Color>
         {
             { "map1", new Color(0.83f, 0.83f, 0.83f) },
-            { "map2", Color.black},
+            { "map2", Color.black },
             { "map3", Color.green },
-            { "map4", Color.blue },  
-            { "map5", Color.red }   
+            { "map4", new Color(0.29f, 0.40f, 0.55f) },
+            { "map5", Color.red }
         };
 
         LogMapBackgroundColors();
