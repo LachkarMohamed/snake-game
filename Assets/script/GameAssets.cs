@@ -30,6 +30,9 @@ public class GameAssets : MonoBehaviour
     public Sprite foodSprite3;
     public Sprite mapSprite1;
     public Sprite mapSprite2;
+    public Sprite mapSprite3;
+    public Sprite mapSprite4;
+    public Sprite mapSprite5;
 
     public GameObject obstaclePrefab1;
 
@@ -69,13 +72,19 @@ public class GameAssets : MonoBehaviour
         mapSprites = new Dictionary<string, Sprite>
         {
             { "map1", mapSprite1 },
-            { "map2", mapSprite2 }
+            { "map2", mapSprite2 },
+            { "map3", mapSprite3 }, 
+            { "map4", mapSprite4 }, 
+            { "map5", mapSprite5 } 
         };
 
         mapBackgroundColors = new Dictionary<string, Color>
         {
-            { "map1", Color.black },
-            { "map2", new Color(0.83f, 0.83f, 0.83f) }
+            { "map1", new Color(0.83f, 0.83f, 0.83f) },
+            { "map2", Color.black},
+            { "map3", Color.green },
+            { "map4", Color.blue },  
+            { "map5", Color.red }   
         };
 
         LogMapBackgroundColors();
