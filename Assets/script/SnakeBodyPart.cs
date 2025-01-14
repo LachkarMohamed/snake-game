@@ -26,7 +26,7 @@ public class SnakeBodyPart
 
     private float GetBodyPartAngle(SnakeMovePosition snakeMovePosition)
     {
-        return snakeMovePosition.GetDirection() switch
+        float angle = snakeMovePosition.GetDirection() switch
         {
             Snake.Direction.Right => snakeMovePosition.GetPreviousDirection() switch
             {
@@ -54,6 +54,15 @@ public class SnakeBodyPart
             },
             _ => 0
         };
+
+        // Flip the angle by 180 degrees
+        angle += 180;
+
+        // Normalize the angle to be within 0-360 degrees
+        if (angle >= 360) angle -= 360;
+        if (angle < 0) angle += 360;
+
+        return angle;
     }
 
     public Vector2Int GetGridPosition() => snakeMovePosition.GetGridPosition();

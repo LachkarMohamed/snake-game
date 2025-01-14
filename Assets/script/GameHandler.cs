@@ -207,12 +207,17 @@ public class GameHandler : MonoBehaviour
         // Obstacles for map5
         List<Vector2Int> obstaclePositionsMap5 = new List<Vector2Int>
         {
-            new Vector2Int(2, 2), new Vector2Int(3, 2), new Vector2Int(4, 2), new Vector2Int(5, 2),
-            new Vector2Int(6, 2), new Vector2Int(7, 2), new Vector2Int(8, 2), new Vector2Int(9, 2),
-            new Vector2Int(10, 2), new Vector2Int(11, 2), new Vector2Int(12, 2), new Vector2Int(13, 2),
-            new Vector2Int(2, 13), new Vector2Int(3, 13), new Vector2Int(4, 13), new Vector2Int(5, 13),
-            new Vector2Int(6, 13), new Vector2Int(7, 13), new Vector2Int(8, 13), new Vector2Int(9, 13),
-            new Vector2Int(10, 13), new Vector2Int(11, 13), new Vector2Int(12, 13), new Vector2Int(13, 13)
+            new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(3, 0),
+            new Vector2Int(12, 0), new Vector2Int(13, 0), new Vector2Int(14, 0), new Vector2Int(15, 0),
+            new Vector2Int(0, 1), new Vector2Int(0, 2), new Vector2Int(0, 3),  new Vector2Int(0, 12),
+            new Vector2Int(0, 13), new Vector2Int(0, 14), new Vector2Int(0, 15), new Vector2Int(15, 1),
+            new Vector2Int(15, 2), new Vector2Int(15, 3), new Vector2Int(15, 12), new Vector2Int(15, 13),
+            new Vector2Int(15, 14), new Vector2Int(15, 15), new Vector2Int(1, 15), new Vector2Int(2, 15),
+            new Vector2Int(3, 15), new Vector2Int(12, 15), new Vector2Int(13, 15), new Vector2Int(14, 15),
+            new Vector2Int(4, 6), new Vector2Int(5, 6), new Vector2Int(6, 6), new Vector2Int(6, 5), new Vector2Int(6, 4),
+            new Vector2Int(9, 9), new Vector2Int(9, 10), new Vector2Int(9, 11), new Vector2Int(10, 9), new Vector2Int(11, 9),
+            new Vector2Int(4, 9), new Vector2Int(5, 9), new Vector2Int(6, 9), new Vector2Int(6, 10), new Vector2Int(6, 11),
+            new Vector2Int(10, 9), new Vector2Int(11, 9), new Vector2Int(9, 4), new Vector2Int(9, 5), new Vector2Int(9, 6),
         };
 
         mapDataDictionary["map5"] = new GameHandlerMapData(
