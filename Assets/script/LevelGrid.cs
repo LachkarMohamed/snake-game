@@ -30,7 +30,14 @@ public class LevelGrid
     {
         obstaclePositions.Add(position);
         Vector3 worldPosition = new Vector3(position.x, position.y);
-        GameObject.Instantiate(obstaclePrefab, worldPosition, Quaternion.identity);
+        GameObject obstacle = GameObject.Instantiate(obstaclePrefab, worldPosition, Quaternion.identity);
+
+        // Disable the SpriteRenderer to make the obstacle invisible
+        SpriteRenderer obstacleRenderer = obstacle.GetComponent<SpriteRenderer>();
+        if (obstacleRenderer != null)
+        {
+            obstacleRenderer.enabled = false;
+        }
     }
 
     public List<Vector2Int> GetObstaclePositions()

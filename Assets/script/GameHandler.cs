@@ -189,11 +189,11 @@ public class GameHandler : MonoBehaviour
             new Vector2Int(7, 15), new Vector2Int(8, 15), new Vector2Int(9, 15), new Vector2Int(10, 15),
             new Vector2Int(11, 15), new Vector2Int(12, 15), new Vector2Int(13, 15), new Vector2Int(14, 15),
             new Vector2Int(1, 7), new Vector2Int(2, 7), new Vector2Int(3, 7), new Vector2Int(4, 7),
-            new Vector2Int(5, 7), new Vector2Int(6, 7), new Vector2Int(7, 7),
+            new Vector2Int(5, 7), new Vector2Int(6, 7), new Vector2Int(8, 7),
             new Vector2Int(9, 7), new Vector2Int(10, 7), new Vector2Int(11, 7), new Vector2Int(12, 7),
             new Vector2Int(13, 7), new Vector2Int(14, 7), new Vector2Int(15, 7),
             new Vector2Int(1, 8), new Vector2Int(2, 8), new Vector2Int(3, 8), new Vector2Int(4, 8),
-            new Vector2Int(5, 8), new Vector2Int(6, 8), new Vector2Int(7, 8),
+            new Vector2Int(5, 8), new Vector2Int(6, 8), new Vector2Int(8, 8),
             new Vector2Int(9, 8), new Vector2Int(10, 8), new Vector2Int(11, 8), new Vector2Int(12, 8),
             new Vector2Int(13, 8), new Vector2Int(14, 8), new Vector2Int(15, 8)
         };
