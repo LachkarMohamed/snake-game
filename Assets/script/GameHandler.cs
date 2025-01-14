@@ -219,6 +219,8 @@ public class GameHandler : MonoBehaviour
             new Vector2Int(4, 9), new Vector2Int(5, 9), new Vector2Int(6, 9), new Vector2Int(6, 10), new Vector2Int(6, 11),
             new Vector2Int(10, 9), new Vector2Int(11, 9), new Vector2Int(9, 4), new Vector2Int(9, 5), new Vector2Int(9, 6),
             new Vector2Int(10, 6),new Vector2Int(11, 6),
+            new Vector2Int(2, 2), new Vector2Int(3, 4), new Vector2Int(3, 9), new Vector2Int(1, 9),
+            new Vector2Int(10, 1), new Vector2Int(10, 7), new Vector2Int(7, 11), new Vector2Int(14, 12),
         };
 
         mapDataDictionary["map5"] = new GameHandlerMapData(
