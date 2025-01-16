@@ -58,9 +58,46 @@ public class SettingsWindowHandler : MonoBehaviour
         foodSprites = new List<Sprite>(LoadSprites("texture/Skins/Food"));
         speedSprites = new List<Sprite>(LoadSprites("texture/Speed"));
 
-        ChangeMap(0);
-        ChangeSkin(0);
-        ChangeSpeed(0);
+        // Initialize selections based on previously selected values
+        if (!string.IsNullOrEmpty(GameHandler.selectedMap))
+        {
+            for (int i = 0; i < mapSprites.Count; i++)
+            {
+                if (mapSprites[i].name == GameHandler.selectedMap)
+                {
+                    currentMapIndex = i;
+                    break;
+                }
+            }
+        }
+
+        if (!string.IsNullOrEmpty(GameHandler.selectedHead))
+        {
+            for (int i = 0; i < headSprites.Count; i++)
+            {
+                if (headSprites[i].name == GameHandler.selectedHead)
+                {
+                    currentHeadIndex = i;
+                    break;
+                }
+            }
+        }
+
+        if (!string.IsNullOrEmpty(GameHandler.selectedSpeed))
+        {
+            for (int i = 0; i < speedSprites.Count; i++)
+            {
+                if (speedSprites[i].name == GameHandler.selectedSpeed)
+                {
+                    currentSpeedIndex = i;
+                    break;
+                }
+            }
+        }
+
+        ChangeMap(0); // Update UI with the current map selection
+        ChangeSkin(0); // Update UI with the current skin selection
+        ChangeSpeed(0); // Update UI with the current speed selection
 
         mapLeftArrow.onClick.AddListener(() => ChangeMap(-1));
         mapRightArrow.onClick.AddListener(() => ChangeMap(1));
