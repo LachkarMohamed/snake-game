@@ -33,7 +33,8 @@ public class GameAssets : MonoBehaviour
     public Sprite mapSprite3;
     public Sprite mapSprite4;
     public Sprite mapSprite5;
-    public Sprite mapSprite6; // Add mapSprite6
+    public Sprite mapSprite6;
+    public Sprite mapSprite7;
 
     public GameObject obstaclePrefab1;
 
@@ -77,7 +78,8 @@ public class GameAssets : MonoBehaviour
             { "map3", mapSprite3 },
             { "map4", mapSprite4 },
             { "map5", mapSprite5 },
-            { "map6", mapSprite6 } // Add map6
+            { "map6", mapSprite6 },
+            { "map7", mapSprite7 }
         };
 
         mapBackgroundColors = new Dictionary<string, Color>
@@ -87,7 +89,8 @@ public class GameAssets : MonoBehaviour
             { "map3", Color.green },
             { "map4", new Color(0.29f, 0.40f, 0.55f) },
             { "map5", Color.red },
-            { "map6", Color.blue } // Add color for map6
+            { "map6", Color.blue },
+            { "map7", Color.yellow }
         };
 
         LogMapBackgroundColors();
