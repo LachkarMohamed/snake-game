@@ -27,6 +27,8 @@ public class SettingsWindowHandler : MonoBehaviour
     [SerializeField] private GameObject mainMenu;
     [SerializeField] private GameObject settingsWindow;
 
+    [SerializeField] private Image[] starImages; // Array of star images (4 stars)
+
     private int currentMapIndex;
     private int currentHeadIndex;
     private int currentSpeedIndex;
@@ -107,6 +109,12 @@ public class SettingsWindowHandler : MonoBehaviour
         speedRightArrow.onClick.AddListener(() => ChangeSpeed(1));
         startButton.onClick.AddListener(StartGame);
         returnButton.onClick.AddListener(ReturnToMainMenu);
+
+        // Initialize star images
+        if (starImages != null && starImages.Length == 4)
+        {
+            UpdateStarRating(currentMapIndex);
+        }
     }
 
     private Sprite[] LoadSprites(string path)
@@ -119,6 +127,7 @@ public class SettingsWindowHandler : MonoBehaviour
         currentMapIndex = (currentMapIndex + direction + mapSprites.Count) % mapSprites.Count;
         selectedMap = mapSprites[currentMapIndex];
         UpdateUI();
+        UpdateStarRating(currentMapIndex); // Update star rating when map changes
     }
 
     private void ChangeSkin(int direction)
@@ -155,6 +164,49 @@ public class SettingsWindowHandler : MonoBehaviour
         mapSelectedImage.sprite = mapSprites[currentMapIndex];
         headSelectedImage.sprite = headSprites[currentHeadIndex];
         speedSelectedImage.sprite = speedSprites[currentSpeedIndex];
+    }
+
+    private void UpdateStarRating(int mapIndex)
+    {
+        int stars = GetStarRatingForMap(mapIndex);
+
+        // Set the appropriate star images
+        for (int i = 0; i < starImages.Length; i++)
+        {
+            if (i < stars)
+            {
+                starImages[i].sprite = Resources.Load<Sprite>("texture/Stars/star" + stars); // Filled star
+            }
+            else
+            {
+                starImages[i].sprite = Resources.Load<Sprite>("texture/Stars/star0"); // Empty star
+            }
+        }
+    }
+
+    private int GetStarRatingForMap(int mapIndex)
+    {
+        // Map1: 0 stars
+        if (mapIndex == 0)
+        {
+            return 0;
+        }
+        // Map2 and Map3: 1 star
+        else if (mapIndex == 1 || mapIndex == 2)
+        {
+            return 1;
+        }
+        // Map4: 2 stars
+        else if (mapIndex == 3)
+        {
+            return 2;
+        }
+        // Map5, Map6, Map7: 3 stars
+        else if (mapIndex == 4 || mapIndex == 5 || mapIndex == 6)
+        {
+            return 3;
+        }
+        return 0; // Default
     }
 
     private void StartGame()
