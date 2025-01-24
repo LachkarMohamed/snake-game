@@ -194,6 +194,7 @@ public class Snake : MonoBehaviour
         await Task.Delay(1000);
         snakeBodySize++;
         CreateSnakeBody();
+        UpdateSnakeBodyScaling(); // Update scaling for all body parts
     }
 
     private void UpdateTransform()
@@ -224,14 +225,59 @@ public class Snake : MonoBehaviour
 
     private void CreateSnakeBody()
     {
+        int totalBodyParts = snakeBodyPartList.Count + 1; // +1 for the new body part
         Vector2Int tailPosition = snakeMovePositionList[snakeMovePositionList.Count - 1].GetGridPosition();
-        SnakeBodyPart newBodyPart = new SnakeBodyPart(snakeBodyPartList.Count, bodySprite);
+        SnakeBodyPart newBodyPart = new SnakeBodyPart(snakeBodyPartList.Count, totalBodyParts, bodySprite);
         newBodyPart.SetSnakeMovePosition(new SnakeMovePosition(null, tailPosition, gridMoveDirection));
         snakeBodyPartList.Add(newBodyPart);
 
+        // Update the sprites of the existing body parts
         if (snakeBodyPartList.Count > 1)
             snakeBodyPartList[snakeBodyPartList.Count - 2].SetSprite(bodySprite);
         snakeBodyPartList[snakeBodyPartList.Count - 1].SetSprite(tailSprite);
+
+        // Update scaling for all body parts
+        UpdateSnakeBodyScaling();
+    }
+
+    private float CalculateTaperedScale(int bodyIndex, int totalBodyParts)
+    {
+        // Special case: If there are exactly 2 body parts
+        if (totalBodyParts == 2)
+        {
+            return bodyIndex == 0 ? 0.92f : 0.8f; // First body part: 92%, Second body part: 80%
+        }
+
+        // Default case: Use quadratic tapering for 3 or more body parts
+        if (totalBodyParts < 2)
+            return 0.9f; // Default scale for a single body part
+
+        // Quadratic function for smooth tapering
+        float t = (float)bodyIndex / (totalBodyParts - 1); // Normalized position (0 to 1)
+        float scale = 1f - 0.2f * t * t; // Quadratic tapering (starts at 1, ends at 0.8)
+
+        return scale;
+    }
+
+    private void UpdateSnakeBodyScaling()
+    {
+        int totalBodyParts = snakeBodyPartList.Count;
+
+        // Ensure there are at least 2 body parts (head + 1 body part)
+        if (totalBodyParts < 1)
+        {
+            // No scaling needed if there's only the head or no body parts
+            return;
+        }
+
+        for (int i = 0; i < snakeBodyPartList.Count; i++)
+        {
+            // Calculate the scale using the tapering function
+            float scale = CalculateTaperedScale(i, totalBodyParts);
+
+            // Assign the scale to the body part
+            snakeBodyPartList[i].transform.localScale = new Vector3(scale, scale, 1f);
+        }
     }
 
     private void UpdateSnakeBodyParts()

@@ -6,13 +6,29 @@ public class SnakeBodyPart
     public Transform transform;
     public SpriteRenderer spriteRenderer;
 
-    public SnakeBodyPart(int bodyIndex, Sprite bodySprite)
+    public SnakeBodyPart(int bodyIndex, int totalBodyParts, Sprite bodySprite)
     {
         GameObject snakeBodyGameObject = new GameObject("SnakeBody", typeof(SpriteRenderer));
         spriteRenderer = snakeBodyGameObject.GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = bodySprite;
         spriteRenderer.sortingOrder = -1 - bodyIndex;
         transform = snakeBodyGameObject.transform;
+
+        // Calculate the scale based on the body index and total body parts
+        float scale = CalculateScale(bodyIndex, totalBodyParts);
+        transform.localScale = new Vector3(scale, scale, 1f);
+    }
+
+    private float CalculateScale(int bodyIndex, int totalBodyParts)
+    {
+        // Ensure there are at least 2 body parts (head + 1 body part)
+        if (totalBodyParts < 2)
+            return 1f; // No scaling for the head or if there's only one body part
+
+        // Calculate the scaling factor
+        float scale = 1f - (bodyIndex * (0.3f / (totalBodyParts - 1))); // Gradually reduce size
+        scale = Mathf.Max(0.7f, scale); // Ensure the scale doesn't go below 70%
+        return scale;
     }
 
     public void SetSnakeMovePosition(SnakeMovePosition snakeMovePosition)
