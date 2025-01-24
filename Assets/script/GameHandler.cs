@@ -88,7 +88,7 @@ public class GameHandler : MonoBehaviour
         snake.SetSpeed(selectedSpeed);
     }
 
-   
+
 
 
     private IEnumerator InitializeMapData()
@@ -240,7 +240,7 @@ public class GameHandler : MonoBehaviour
             new Vector2Int(9, 13), new Vector2Int(10, 13), new Vector2Int(11, 13), new Vector2Int(12, 13), new Vector2Int(13, 13), new Vector2Int(14, 13), new Vector2Int(15, 13),
             new Vector2Int(7, 5), new Vector2Int(7, 6), new Vector2Int(7, 7), new Vector2Int(7, 8), new Vector2Int(7, 7), new Vector2Int(8, 10), new Vector2Int(8, 8), new Vector2Int(8, 9),
             new Vector2Int(11, 0), new Vector2Int(11, 1), new Vector2Int(11, 2), new Vector2Int(11, 3), new Vector2Int(11, 4), new Vector2Int(11, 5), new Vector2Int(11, 6), new Vector2Int(11, 7), new Vector2Int(11, 8), new Vector2Int(11, 9),
-        };   
+        };
 
         mapDataDictionary["map6"] = new GameHandlerMapData(
             obstaclePositionsMap6,
@@ -257,7 +257,7 @@ public class GameHandler : MonoBehaviour
             new Vector2Int(0, 12), new Vector2Int(0, 13), new Vector2Int(0, 14), new Vector2Int(0, 15), new Vector2Int(1, 15),
             new Vector2Int(4, 15), new Vector2Int(5, 15), new Vector2Int(6, 15), new Vector2Int(7, 15), new Vector2Int(8, 15), new Vector2Int(9, 15), new Vector2Int(10, 15), new Vector2Int(11, 15), new Vector2Int(12, 15),
             new Vector2Int(6, 10), new Vector2Int(6, 11), new Vector2Int(6, 12), new Vector2Int(6, 13), new Vector2Int(6, 14),
-        }; 
+        };
 
         mapDataDictionary["map7"] = new GameHandlerMapData(
             obstaclePositionsMap7,

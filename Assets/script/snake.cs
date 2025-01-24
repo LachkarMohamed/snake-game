@@ -171,6 +171,27 @@ public class Snake : MonoBehaviour
     }
 
 
+    public void UndoLastMove()
+    {
+        if (snakeMovePositionList.Count > 1) // Ensure there is at least one move to undo
+        {
+            // Remove the last move from the list
+            snakeMovePositionList.RemoveAt(0);
+
+            // Update the snake's position to the previous move
+            gridPosition = snakeMovePositionList[0].GetGridPosition();
+
+            // Update the snake's body parts immediately
+            UpdateSnakeBodyParts();
+
+            // Update the snake's head position immediately
+            UpdateTransform();
+
+            // Reset the state to Alive
+            state = State.Alive;
+        }
+    }
+
     private async void CheckFoodConsumption()
     {
         if (levelGrid.TrySnakeEatFood(gridPosition))
@@ -199,8 +220,11 @@ public class Snake : MonoBehaviour
 
     private void UpdateTransform()
     {
-        Vector2Int gridMoveDirectionVector = GetDirectionVector(gridMoveDirection);
+        // Update the head's position to the current grid position
         transform.position = new Vector3(gridPosition.x, gridPosition.y);
+
+        // Update the head's rotation based on the current direction
+        Vector2Int gridMoveDirectionVector = GetDirectionVector(gridMoveDirection);
         transform.eulerAngles = new Vector3(0, 0, GetAngleFromVector(gridMoveDirectionVector) - 90);
     }
 
@@ -211,7 +235,7 @@ public class Snake : MonoBehaviour
             if (gridPosition == snakeBodyPart.GetGridPosition())
             {
                 state = State.Dead;
-                pauseMenu.ShowPauseMenu(true);
+                pauseMenu.ShowPauseMenu(true); // Show pause menu with "Continue" option
                 return;
             }
         }
@@ -219,7 +243,7 @@ public class Snake : MonoBehaviour
         if (levelGrid.IsObstacleAtPosition(gridPosition))
         {
             state = State.Dead;
-            pauseMenu.ShowPauseMenu(true);
+            pauseMenu.ShowPauseMenu(true); // Show pause menu with "Continue" option
         }
     }
 

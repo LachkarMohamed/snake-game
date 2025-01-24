@@ -8,6 +8,8 @@ public class PauseMenu : MonoBehaviour
     public Button returnToMainMenuButton;
     public Button tryAgainButton;
     public Button pauseButton;
+    private int continueCount = 3; // Allow one continue
+
 
     private void Start()
     {
@@ -18,7 +20,6 @@ public class PauseMenu : MonoBehaviour
     public void ShowPauseMenu(bool isGameOver)
     {
         pauseMenuUI.SetActive(true);
-        continueButton.interactable = !isGameOver;
         Time.timeScale = 0f; // Pause the game
     }
 
@@ -28,13 +29,23 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f; // Resume the game
     }
 
+
     public void OnContinueButton()
     {
-        HidePauseMenu();
-        Snake snake = FindObjectOfType<Snake>();
-        if (snake != null)
+        if (continueCount > 0)
         {
-            snake.SetPause(true);
+            continueCount--;
+            HidePauseMenu();
+            Snake snake = FindObjectOfType<Snake>();
+            if (snake != null)
+            {
+                snake.UndoLastMove(); // Undo the last move
+                snake.SetPause(true); // Unpause the game
+            }
+        }
+        else
+        {
+            continueButton.interactable = false; // Disable the continue button
         }
     }
 

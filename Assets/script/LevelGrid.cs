@@ -33,11 +33,11 @@ public class LevelGrid
         GameObject obstacle = GameObject.Instantiate(obstaclePrefab, worldPosition, Quaternion.identity);
 
         // Disable the SpriteRenderer to make the obstacle invisible
-        /*SpriteRenderer obstacleRenderer = obstacle.GetComponent<SpriteRenderer>();
+        SpriteRenderer obstacleRenderer = obstacle.GetComponent<SpriteRenderer>();
         if (obstacleRenderer != null)
         {
             obstacleRenderer.enabled = false;
-        }*/
+        }
     }
 
     public List<Vector2Int> GetObstaclePositions()
