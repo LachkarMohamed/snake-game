@@ -88,6 +88,9 @@ public class GameHandler : MonoBehaviour
         snake.SetSpeed(selectedSpeed);
     }
 
+   
+
+
     private IEnumerator InitializeMapData()
     {
         if (GameAssets.i == null)
@@ -310,9 +313,33 @@ public class GameHandler : MonoBehaviour
         Loader.Load(Loader.Scene.GameScene);
     }
 
+    private int GetStarRatingForSelectedMap()
+    {
+        if (selectedMap == "map1")
+        {
+            return 0; // 0 stars
+        }
+        else if (selectedMap == "map2" || selectedMap == "map3")
+        {
+            return 1; // 1 star
+        }
+        else if (selectedMap == "map4")
+        {
+            return 2; // 2 stars
+        }
+        else if (selectedMap == "map5" || selectedMap == "map6" || selectedMap == "map7")
+        {
+            return 3; // 3 stars
+        }
+        return 0; // Default (no stars)
+    }
+
     public static void AddScore(int amount)
     {
-        score += amount;
+        int starRating = instance.GetStarRatingForSelectedMap();
+        int multiplier = starRating + 1; // 0 stars = *1, 1 star = *2, 2 stars = *3, 3 stars = *4
+
+        score += amount * multiplier;
         instance.UpdateScoreText();
     }
 
