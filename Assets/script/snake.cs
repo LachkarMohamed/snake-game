@@ -25,6 +25,8 @@ public class Snake : MonoBehaviour
     private Sprite tailSprite;
     private Sprite foodSprite;
 
+    private Stack<List<SnakeMovePosition>> undoStack = new Stack<List<SnakeMovePosition>>();
+
     public void Setup(LevelGrid levelGrid)
     {
         this.levelGrid = levelGrid;
@@ -146,16 +148,20 @@ public class Snake : MonoBehaviour
 
     private void UpdateSnakePosition()
     {
-        if (snakeMovePositionList.Count > snakeBodySize)
-            snakeMovePositionList.RemoveAt(snakeMovePositionList.Count - 1);
-
+        // Update the snake's position first
         SnakeMovePosition previousSnakeMovePosition = snakeMovePositionList.Count > 0 ? snakeMovePositionList[0] : null;
         SnakeMovePosition snakeMovePosition = new SnakeMovePosition(previousSnakeMovePosition, gridPosition, gridMoveDirection);
         snakeMovePositionList.Insert(0, snakeMovePosition);
 
+        if (snakeMovePositionList.Count > snakeBodySize)
+            snakeMovePositionList.RemoveAt(snakeMovePositionList.Count - 1);
+
         Vector2Int gridMoveDirectionVector = GetDirectionVector(gridMoveDirection);
         gridPosition += gridMoveDirectionVector;
         gridPosition = levelGrid.ValidateGridPosition(gridPosition);
+
+        // Save the state AFTER the move has been applied
+        undoStack.Push(new List<SnakeMovePosition>(snakeMovePositionList));
     }
 
     private Vector2Int GetDirectionVector(Direction direction)
@@ -173,21 +179,39 @@ public class Snake : MonoBehaviour
 
     public void UndoLastMove()
     {
-        if (snakeMovePositionList.Count > 1) // Ensure there is at least one move to undo
+        if (undoStack.Count > 0)
         {
-            // Remove the last move from the list
-            snakeMovePositionList.RemoveAt(0);
+            // Restore the previous state
+            snakeMovePositionList = undoStack.Pop();
 
-            // Update the snake's position to the previous move
-            gridPosition = snakeMovePositionList[0].GetGridPosition();
+            // Destroy all existing body parts
+            foreach (SnakeBodyPart bodyPart in snakeBodyPartList)
+            {
+                GameObject.Destroy(bodyPart.transform.gameObject);
+            }
+            snakeBodyPartList.Clear();
 
-            // Update the snake's body parts immediately
+            // Rebuild body parts from the restored positions
+            snakeBodySize = snakeMovePositionList.Count - 1; // Head is position[0]
+            for (int i = 1; i < snakeMovePositionList.Count; i++)
+            {
+                SnakeBodyPart newBodyPart = new SnakeBodyPart(i - 1, snakeBodySize, bodySprite);
+                newBodyPart.SetSnakeMovePosition(snakeMovePositionList[i]);
+                snakeBodyPartList.Add(newBodyPart);
+            }
+
+            // Update head position/direction
+            if (snakeMovePositionList.Count > 0)
+            {
+                gridPosition = snakeMovePositionList[0].GetGridPosition();
+                gridMoveDirection = snakeMovePositionList[0].GetDirection();
+            }
+
+            // Update visuals
             UpdateSnakeBodyParts();
-
-            // Update the snake's head position immediately
+            UpdateSnakeBodyScaling();
             UpdateTransform();
 
-            // Reset the state to Alive
             state = State.Alive;
         }
     }
@@ -249,18 +273,22 @@ public class Snake : MonoBehaviour
 
     private void CreateSnakeBody()
     {
-        int totalBodyParts = snakeBodyPartList.Count + 1; // +1 for the new body part
-        Vector2Int tailPosition = snakeMovePositionList[snakeMovePositionList.Count - 1].GetGridPosition();
-        SnakeBodyPart newBodyPart = new SnakeBodyPart(snakeBodyPartList.Count, totalBodyParts, bodySprite);
-        newBodyPart.SetSnakeMovePosition(new SnakeMovePosition(null, tailPosition, gridMoveDirection));
+        SnakeBodyPart newBodyPart = new SnakeBodyPart(snakeBodyPartList.Count, snakeBodySize + 1, bodySprite);
+        newBodyPart.SetSnakeMovePosition(snakeMovePositionList[snakeMovePositionList.Count - 1]);
         snakeBodyPartList.Add(newBodyPart);
 
-        // Update the sprites of the existing body parts
-        if (snakeBodyPartList.Count > 1)
-            snakeBodyPartList[snakeBodyPartList.Count - 2].SetSprite(bodySprite);
-        snakeBodyPartList[snakeBodyPartList.Count - 1].SetSprite(tailSprite);
+        // Update existing body parts to body sprite
+        foreach (SnakeBodyPart bodyPart in snakeBodyPartList)
+        {
+            bodyPart.SetSprite(bodySprite);
+        }
 
-        // Update scaling for all body parts
+        // Set last part to tail sprite
+        if (snakeBodyPartList.Count > 0)
+        {
+            snakeBodyPartList[snakeBodyPartList.Count - 1].SetSprite(tailSprite);
+        }
+
         UpdateSnakeBodyScaling();
     }
 
