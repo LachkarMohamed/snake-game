@@ -179,39 +179,42 @@ public class Snake : MonoBehaviour
 
     public void UndoLastMove()
     {
-        if (undoStack.Count > 0)
+        if (undoStack.Count >= 1) // Ensure at least one state exists
         {
-            // Restore the previous state
+            // Restore the previous position (undo once)
             snakeMovePositionList = undoStack.Pop();
 
-            // Destroy all existing body parts
-            foreach (SnakeBodyPart bodyPart in snakeBodyPartList)
-            {
-                GameObject.Destroy(bodyPart.transform.gameObject);
-            }
-            snakeBodyPartList.Clear();
-
-            // Rebuild body parts from the restored positions
-            snakeBodySize = snakeMovePositionList.Count - 1; // Head is position[0]
-            for (int i = 1; i < snakeMovePositionList.Count; i++)
-            {
-                SnakeBodyPart newBodyPart = new SnakeBodyPart(i - 1, snakeBodySize, bodySprite);
-                newBodyPart.SetSnakeMovePosition(snakeMovePositionList[i]);
-                snakeBodyPartList.Add(newBodyPart);
-            }
-
-            // Update head position/direction
             if (snakeMovePositionList.Count > 0)
             {
+                // Update head position
                 gridPosition = snakeMovePositionList[0].GetGridPosition();
-                gridMoveDirection = snakeMovePositionList[0].GetDirection();
             }
 
-            // Update visuals
-            UpdateSnakeBodyParts();
-            UpdateSnakeBodyScaling();
+            // Check if there's an older state to undo the direction
+            if (undoStack.Count >= 1)
+            {
+                // Peek (don't pop) the second-to-last state
+                List<SnakeMovePosition> olderSnakeMovePositionList = undoStack.Peek();
+                if (olderSnakeMovePositionList.Count > 0)
+                {
+                    // Update direction to the older state's direction (undo twice for direction)
+                    gridMoveDirection = olderSnakeMovePositionList[0].GetDirection();
+                    lastDirection = gridMoveDirection; // Ensure input validation uses the older direction
+                }
+            }
+
+            // Remove the FIRST body part (the one after the head)
+            if (snakeBodyPartList.Count > 0)
+            {
+                UnityEngine.Object.Destroy(snakeBodyPartList[0].transform.gameObject);
+                snakeBodyPartList.RemoveAt(0);
+                snakeBodySize--;
+            }
+
+            // Update head rotation based on the older direction
             UpdateTransform();
 
+            // Reset state
             state = State.Alive;
         }
     }
@@ -273,22 +276,18 @@ public class Snake : MonoBehaviour
 
     private void CreateSnakeBody()
     {
-        SnakeBodyPart newBodyPart = new SnakeBodyPart(snakeBodyPartList.Count, snakeBodySize + 1, bodySprite);
-        newBodyPart.SetSnakeMovePosition(snakeMovePositionList[snakeMovePositionList.Count - 1]);
+        int totalBodyParts = snakeBodyPartList.Count + 1; // +1 for the new body part
+        Vector2Int tailPosition = snakeMovePositionList[snakeMovePositionList.Count - 1].GetGridPosition();
+        SnakeBodyPart newBodyPart = new SnakeBodyPart(snakeBodyPartList.Count, totalBodyParts, bodySprite);
+        newBodyPart.SetSnakeMovePosition(new SnakeMovePosition(null, tailPosition, gridMoveDirection));
         snakeBodyPartList.Add(newBodyPart);
 
-        // Update existing body parts to body sprite
-        foreach (SnakeBodyPart bodyPart in snakeBodyPartList)
-        {
-            bodyPart.SetSprite(bodySprite);
-        }
+        // Update the sprites of the existing body parts
+        if (snakeBodyPartList.Count > 1)
+            snakeBodyPartList[snakeBodyPartList.Count - 2].SetSprite(bodySprite);
+        snakeBodyPartList[snakeBodyPartList.Count - 1].SetSprite(tailSprite);
 
-        // Set last part to tail sprite
-        if (snakeBodyPartList.Count > 0)
-        {
-            snakeBodyPartList[snakeBodyPartList.Count - 1].SetSprite(tailSprite);
-        }
-
+        // Update scaling for all body parts
         UpdateSnakeBodyScaling();
     }
 
